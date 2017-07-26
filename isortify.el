@@ -63,8 +63,8 @@ If isort exits with an error, the output will be shown in a help-window."
 
 ;;;###autoload
 (define-minor-mode isort-mode
-  "Automatically run ISORT before saving."
-  :lighter " ISORT"
+  "Automatically run isort before saving."
+  :lighter " Isort"
   (if isort-mode
       (add-hook 'before-save-hook 'isortify-buffer nil t)
     (remove-hook 'before-save-hook 'isortify-buffer t)))
