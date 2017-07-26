@@ -1,11 +1,10 @@
-;;; isortify.el --- (automatically) format python buffers using ISORT.
+;;; isortify.el --- (automatically) format python buffers using isort.
 
-;; Copyright (C) 2016 Joris Engbers
+;; Copyright (C) 2016 Artem Malyshev
 
-;; Author: Joris Engbers <info@jorisengbers.nl>
-;; Homepage: https://github.com/JorisE/isortify
-;; Version: 0.0.4
-;; Package-Version: 20161202.1055
+;; Author: Artem Malyshev <proofit404@gmail.com>
+;; Homepage: https://github.com/proofit404/isortify
+;; Version: 0.0.1
 ;; Package-Requires: ()
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -25,7 +24,7 @@
 ;;
 ;; Isortify uses isort to format a Python buffer.  It can be called
 ;; explicitly on a certain buffer, but more conveniently, a minor-mode
-;; 'isort-mode' is provided that turns on automatically running ISORT
+;; 'isort-mode' is provided that turns on automatically running isort
 ;; on a buffer before saving.
 ;;
 ;; Installation:
