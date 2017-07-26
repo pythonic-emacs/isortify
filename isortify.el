@@ -42,7 +42,7 @@
   "Call process isort on INPUT-BUFFER saving the output to OUTPUT-BUFFER.
 Return the exit code."
   (with-current-buffer input-buffer
-    (call-process-region (point-min) (point-max) "isort" nil output-buffer nil "--multi_line" "3" "--trailing-comma" "-")))
+    (call-process-region (point-min) (point-max) "isort" nil output-buffer nil "--multi-line" "3" "--trailing-comma" "-")))
 
 ;;;###autoload
 (defun isortify-buffer ()
