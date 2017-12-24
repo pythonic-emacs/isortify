@@ -51,6 +51,7 @@ If isort exits with an error, the output will be shown in a help-window."
   (interactive)
   (let* ((original-buffer (current-buffer))
          (original-point (point))
+         (original-window-pos (window-start))
          (tmpbuf (generate-new-buffer "*isortify*"))
          (exit-code (isortify-call-bin original-buffer tmpbuf)))
     (unwind-protect
@@ -59,7 +60,8 @@ If isort exits with an error, the output will be shown in a help-window."
           (with-current-buffer tmpbuf
             (copy-to-buffer original-buffer (point-min) (point-max)))
           (kill-buffer tmpbuf)
-          (goto-char original-point)))))
+          (goto-char original-point)
+          (set-window-start (selected-window) original-window-pos)))))
 
 ;;;###autoload
 (define-minor-mode isort-mode
