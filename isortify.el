@@ -38,11 +38,28 @@
 ;;
 ;;; Code:
 
+(defvar isortify-multi-line-output nil)
+
+(defvar isortify-trailing-comma nil)
+
+(defvar isortify-known-first-party nil)
+
 (defun isortify-call-bin (input-buffer output-buffer)
   "Call process isort on INPUT-BUFFER saving the output to OUTPUT-BUFFER.
-Return the exit code."
+
+Return isort process the exit code."
   (with-current-buffer input-buffer
-    (call-process-region (point-min) (point-max) "isort" nil output-buffer nil "--multi-line" "3" "--trailing-comma" "-")))
+    (let (args)
+      (when isortify-multi-line-output
+        (add-to-list 'args "--multi-line" t)
+        (add-to-list 'args (number-to-string isortify-multi-line-output) t))
+      (when isortify-trailing-comma
+        (add-to-list 'args "--trailing-comma" t))
+      (when isortify-known-first-party
+        (add-to-list 'args "--project" t)
+        (add-to-list 'args isortify-known-first-party t))
+      (add-to-list 'args "-" t)
+      (apply 'call-process-region (point-min) (point-max) "isort" nil output-buffer nil args))))
 
 ;;;###autoload
 (defun isortify-buffer ()
