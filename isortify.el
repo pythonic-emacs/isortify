@@ -62,23 +62,26 @@ Return isort process the exit code."
       (apply 'call-process-region (point-min) (point-max) "isort" nil output-buffer nil args))))
 
 ;;;###autoload
-(defun isortify-buffer ()
+(defun isortify-buffer (&optional display)
   "Try to isortify the current buffer.
-If isort exits with an error, the output will be shown in a help-window."
-  (interactive)
+
+Show isort output, if isort exit abnormally and DISPLAY is t."
+  (interactive (list t))
   (let* ((original-buffer (current-buffer))
          (original-point (point))
          (original-window-pos (window-start))
-         (tmpbuf (generate-new-buffer "*isortify*"))
-         (exit-code (isortify-call-bin original-buffer tmpbuf)))
-    (unwind-protect
-        (if (not (zerop exit-code))
+         (tmpbuf (get-buffer-create "*isortify*")))
+    (condition-case err
+        (if (not (zerop (isortify-call-bin original-buffer tmpbuf)))
             (error "Isort failed, see %s buffer for details" (buffer-name tmpbuf))
           (with-current-buffer tmpbuf
             (copy-to-buffer original-buffer (point-min) (point-max)))
           (kill-buffer tmpbuf)
           (goto-char original-point)
-          (set-window-start (selected-window) original-window-pos)))))
+          (set-window-start (selected-window) original-window-pos))
+      (error (message "%s" (error-message-string err))
+             (when display
+               (pop-to-buffer tmpbuf))))))
 
 ;;;###autoload
 (define-minor-mode isort-mode
