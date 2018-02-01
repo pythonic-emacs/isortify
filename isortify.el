@@ -59,7 +59,13 @@ Return isort process the exit code."
         (add-to-list 'args "--project" t)
         (add-to-list 'args isortify-known-first-party t))
       (add-to-list 'args "-" t)
-      (apply 'call-process-region (point-min) (point-max) "isort" nil output-buffer nil args))))
+      (let ((process (apply 'start-file-process "isortify" output-buffer "isort" args)))
+        (process-send-region process (point-min) (point-max))
+        (process-send-eof process)
+        (accept-process-output process nil nil t)
+        (while (process-live-p process)
+          (accept-process-output process nil nil t))
+        (process-exit-status process)))))
 
 ;;;###autoload
 (defun isortify-buffer (&optional display)
