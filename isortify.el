@@ -60,6 +60,7 @@ Return isort process the exit code."
         (add-to-list 'args isortify-known-first-party t))
       (add-to-list 'args "-" t)
       (let ((process (apply 'start-file-process "isortify" output-buffer "isort" args)))
+        (set-process-sentinel process (lambda (process event)))
         (process-send-region process (point-min) (point-max))
         (process-send-eof process)
         (accept-process-output process nil nil t)
