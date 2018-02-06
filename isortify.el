@@ -51,15 +51,16 @@ Return isort process the exit code."
   (with-current-buffer input-buffer
     (let (args)
       (when isortify-multi-line-output
-        (add-to-list 'args "--multi-line" t)
-        (add-to-list 'args (number-to-string isortify-multi-line-output) t))
+        (push "--multi-line" args)
+        (push (number-to-string isortify-multi-line-output) args))
       (when isortify-trailing-comma
-        (add-to-list 'args "--trailing-comma" t))
+        (push "--trailing-comma" args))
       (when isortify-known-first-party
-        (add-to-list 'args "--project" t)
-        (add-to-list 'args isortify-known-first-party t))
-      (add-to-list 'args "-" t)
-      (let ((process (apply 'start-file-process "isortify" output-buffer "isort" args)))
+        (dolist (project isortify-known-first-party)
+          (push "--project" args)
+          (push project args)))
+      (push "-" args)
+      (let ((process (apply 'start-file-process "isortify" output-buffer "isort" (reverse args))))
         (set-process-sentinel process (lambda (process event)))
         (process-send-region process (point-min) (point-max))
         (process-send-eof process)
