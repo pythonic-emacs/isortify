@@ -79,6 +79,10 @@ Show isort output, if isort exit abnormally and DISPLAY is t."
          (original-point (point))
          (original-window-pos (window-start))
          (tmpbuf (get-buffer-create "*isortify*")))
+    ;; This buffer can be left after previous isort invocation.  It
+    ;; can contain error message of the previous run.
+    (with-current-buffer tmpbuf
+      (erase-buffer))
     (condition-case err
         (if (not (zerop (isortify-call-bin original-buffer tmpbuf)))
             (error "Isort failed, see %s buffer for details" (buffer-name tmpbuf))
