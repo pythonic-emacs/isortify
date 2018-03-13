@@ -1,6 +1,6 @@
 ;;; isortify.el --- (automatically) format python buffers using isort.
 
-;; Copyright (C) 2016 Artem Malyshev
+;; Copyright (C) 2016-2018 Artem Malyshev
 
 ;; Author: Artem Malyshev <proofit404@gmail.com>
 ;; Homepage: https://github.com/proofit404/isortify
