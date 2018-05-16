@@ -24,7 +24,7 @@
 ;;
 ;; Isortify uses isort to format a Python buffer.  It can be called
 ;; explicitly on a certain buffer, but more conveniently, a minor-mode
-;; 'isort-mode' is provided that turns on automatically running isort
+;; 'isortify-mode' is provided that turns on automatically running isort
 ;; on a buffer before saving.
 ;;
 ;; Installation:
@@ -32,9 +32,9 @@
 ;; Add isortify.el to your load-path.
 ;;
 ;; To automatically format all Python buffers before saving, add the function
-;; isort-mode to python-mode-hook:
+;; isortify-mode to python-mode-hook:
 ;;
-;; (add-hook 'python-mode-hook 'isort-mode)
+;; (add-hook 'python-mode-hook 'isortify-mode)
 ;;
 ;;; Code:
 
@@ -101,10 +101,10 @@ Show isort output, if isort exit abnormally and DISPLAY is t."
                (pop-to-buffer tmpbuf))))))
 
 ;;;###autoload
-(define-minor-mode isort-mode
+(define-minor-mode isortify-mode
   "Automatically run isort before saving."
   :lighter " Isort"
-  (if isort-mode
+  (if isortify-mode
       (add-hook 'before-save-hook 'isortify-buffer nil t)
     (remove-hook 'before-save-hook 'isortify-buffer t)))
 
