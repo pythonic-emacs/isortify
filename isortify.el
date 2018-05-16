@@ -44,6 +44,8 @@
 
 (defvar isortify-known-first-party nil)
 
+(defvar isortify-lines-after-imports nil)
+
 (defun isortify-call-bin (input-buffer output-buffer)
   "Call process isort on INPUT-BUFFER saving the output to OUTPUT-BUFFER.
 
@@ -59,6 +61,9 @@ Return isort process the exit code."
         (dolist (project isortify-known-first-party)
           (push "--project" args)
           (push project args)))
+      (when isortify-lines-after-imports
+        (push "--lines-after-imports" args)
+        (push (number-to-string isortify-lines-after-imports) args))
       (push "-" args)
       (let ((process (apply 'start-file-process "isortify" output-buffer "isort" (reverse args))))
         (set-process-sentinel process (lambda (process event)))
