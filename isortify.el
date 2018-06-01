@@ -5,7 +5,6 @@
 ;; Author: Artem Malyshev <proofit404@gmail.com>
 ;; Homepage: https://github.com/proofit404/isortify
 ;; Version: 0.0.1
-;; Package-Version: 20180516.1618
 ;; Package-Requires: ()
 
 ;; This file is free software; you can redistribute it and/or modify
