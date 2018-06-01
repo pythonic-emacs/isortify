@@ -5,6 +5,7 @@
 ;; Author: Artem Malyshev <proofit404@gmail.com>
 ;; Homepage: https://github.com/proofit404/isortify
 ;; Version: 0.0.1
+;; Package-Version: 20180516.1618
 ;; Package-Requires: ()
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -46,6 +47,8 @@
 
 (defvar isortify-lines-after-imports nil)
 
+(defvar isortify-line-width nil)
+
 (defun isortify-call-bin (input-buffer output-buffer)
   "Call process isort on INPUT-BUFFER saving the output to OUTPUT-BUFFER.
 
@@ -64,6 +67,9 @@ Return isort process the exit code."
       (when isortify-lines-after-imports
         (push "--lines-after-imports" args)
         (push (number-to-string isortify-lines-after-imports) args))
+      (when isortify-line-width
+        (push "--line-width" args)
+        (push (number-to-string isortify-line-width) args))
       (push "-" args)
       (let ((process (apply 'start-file-process "isortify" output-buffer "isort" (reverse args))))
         (set-process-sentinel process (lambda (process event)))
