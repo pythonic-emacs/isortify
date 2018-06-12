@@ -5,7 +5,7 @@
 ;; Author: Artem Malyshev <proofit404@gmail.com>
 ;; Homepage: https://github.com/proofit404/isortify
 ;; Version: 0.0.1
-;; Package-Requires: ()
+;; Package-Requires: ((emacs "25") (pythonic "0.1.0"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published
@@ -38,6 +38,8 @@
 ;;
 ;;; Code:
 
+(require 'pythonic)
+
 (defvar isortify-multi-line-output nil)
 
 (defvar isortify-trailing-comma nil)
@@ -53,31 +55,38 @@
 
 Return isort process the exit code."
   (with-current-buffer input-buffer
-    (let (args)
-      (when isortify-multi-line-output
-        (push "--multi-line" args)
-        (push (number-to-string isortify-multi-line-output) args))
-      (when isortify-trailing-comma
-        (push "--trailing-comma" args))
-      (when isortify-known-first-party
-        (dolist (project isortify-known-first-party)
-          (push "--project" args)
-          (push project args)))
-      (when isortify-lines-after-imports
-        (push "--lines-after-imports" args)
-        (push (number-to-string isortify-lines-after-imports) args))
-      (when isortify-line-width
-        (push "--line-width" args)
-        (push (number-to-string isortify-line-width) args))
-      (push "-" args)
-      (let ((process (apply 'start-file-process "isortify" output-buffer "isort" (reverse args))))
-        (set-process-sentinel process (lambda (process event)))
-        (process-send-region process (point-min) (point-max))
-        (process-send-eof process)
-        (accept-process-output process nil nil t)
-        (while (process-live-p process)
-          (accept-process-output process nil nil t))
-        (process-exit-status process)))))
+    (let ((process
+           (pythonic-start-process :process "isortify"
+                                   :buffer output-buffer
+                                   :sentinel (lambda (process event))
+                                   :args `("-m" "isort" ,@(isortify-call-args)))))
+      (process-send-region process (point-min) (point-max))
+      (process-send-eof process)
+      (accept-process-output process nil nil t)
+      (while (process-live-p process)
+        (accept-process-output process nil nil t))
+      (process-exit-status process))))
+
+(defun isortify-call-args ()
+  "Collect CLI arguments for isort process."
+  (let (args)
+    (when isortify-multi-line-output
+      (push "--multi-line" args)
+      (push (number-to-string isortify-multi-line-output) args))
+    (when isortify-trailing-comma
+      (push "--trailing-comma" args))
+    (when isortify-known-first-party
+      (dolist (project isortify-known-first-party)
+        (push "--project" args)
+        (push project args)))
+    (when isortify-lines-after-imports
+      (push "--lines-after-imports" args)
+      (push (number-to-string isortify-lines-after-imports) args))
+    (when isortify-line-width
+      (push "--line-width" args)
+      (push (number-to-string isortify-line-width) args))
+    (push "-" args)
+    (reverse args)))
 
 ;;;###autoload
 (defun isortify-buffer (&optional display)
