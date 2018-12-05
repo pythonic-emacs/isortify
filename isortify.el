@@ -46,6 +46,8 @@
 
 (defvar isortify-known-first-party nil)
 
+(defvar isortify-known-third-party nil)
+
 (defvar isortify-lines-after-imports nil)
 
 (defvar isortify-line-width nil)
@@ -79,6 +81,10 @@ Return isort process the exit code."
       (dolist (project isortify-known-first-party)
         (push "--project" args)
         (push project args)))
+    (when isortify-known-third-party
+      (dolist (thirdparty isortify-known-third-party)
+        (push "--thirdparty" args)
+        (push thirdparty args)))
     (when isortify-lines-after-imports
       (push "--lines-after-imports" args)
       (push (number-to-string isortify-lines-after-imports) args))
