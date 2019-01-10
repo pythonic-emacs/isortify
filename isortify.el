@@ -72,6 +72,8 @@ Return isort process the exit code."
 (defun isortify-call-args ()
   "Collect CLI arguments for isort process."
   (let (args)
+    (when (string= "ipython" python-shell-interpreter)
+      (push "--" args))
     (when isortify-multi-line-output
       (push "--multi-line" args)
       (push (number-to-string isortify-multi-line-output) args))
