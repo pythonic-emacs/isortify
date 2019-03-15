@@ -64,6 +64,7 @@ Return isort process the exit code."
                                    :args `("-m" "isort" ,@(isortify-call-args)))))
       (process-send-region process (point-min) (point-max))
       (process-send-eof process)
+      (process-send-eof process)  ;; Close pipe twice on purpose to prevent deadlock.
       (accept-process-output process nil nil t)
       (while (process-live-p process)
         (accept-process-output process nil nil t))
