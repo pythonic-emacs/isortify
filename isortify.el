@@ -52,46 +52,28 @@
 
 (defvar isortify-line-width nil)
 
-(defvar isortify-code "
-import sys
-
-from isort import SortImports
-from isort.main import parse_args
-
-buffer = sys.argv[-1]
-
-arguments = parse_args(sys.argv[:-1])
-
-try:
-    del arguments['check']
-except KeyError:
-    pass
-
-try:
-    del arguments['files']
-except KeyError:
-    pass
-
-print(SortImports(file_contents=buffer, **arguments).output)
-")
-
 (defun isortify-call-bin (input-buffer output-buffer)
   "Call process isort on INPUT-BUFFER saving the output to OUTPUT-BUFFER.
 
 Return isort process the exit code."
-  (pythonic-call-process
-   :buffer output-buffer
-   :args `("-c"
-           ,isortify-code
-           ,@(isortify-call-args)
-           ,(with-current-buffer input-buffer
-              (buffer-substring-no-properties
-               (point-min)
-               (point-max))))))
+  (with-current-buffer input-buffer
+    (let ((process
+           (pythonic-start-process :process "isortify"
+                                   :buffer output-buffer
+                                   :sentinel (lambda (process event))
+                                   :args `("-m" "isort" ,@(isortify-call-args)))))
+      (process-send-region process (point-min) (point-max))
+      (process-send-eof process)
+      (accept-process-output process nil nil t)
+      (while (process-live-p process)
+        (accept-process-output process nil nil t))
+      (process-exit-status process))))
 
 (defun isortify-call-args ()
   "Collect CLI arguments for isort process."
   (let (args)
+    (when (string= "ipython" python-shell-interpreter)
+      (push "--" args))
     (when isortify-multi-line-output
       (push "--multi-line" args)
       (push (number-to-string isortify-multi-line-output) args))
@@ -111,6 +93,7 @@ Return isort process the exit code."
     (when isortify-line-width
       (push "--line-width" args)
       (push (number-to-string isortify-line-width) args))
+    (push "-" args)
     (reverse args)))
 
 ;;;###autoload
