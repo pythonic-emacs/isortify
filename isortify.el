@@ -115,6 +115,7 @@ Show isort output, if isort exit abnormally and DISPLAY is t."
         (if (not (zerop (isortify-call-bin original-buffer tmpbuf)))
             (error "Isort failed, see %s buffer for details" (buffer-name tmpbuf))
           (with-current-buffer tmpbuf
+            (ansi-color-filter-region (point-min) (point-max))
             (copy-to-buffer original-buffer (point-min) (point-max)))
           (kill-buffer tmpbuf)
           (goto-char original-point)
