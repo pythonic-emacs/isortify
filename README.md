@@ -6,7 +6,7 @@
 ## 💾 Quickstart
 
 To automatically format all Python buffers before saving, add the function
-isortify-mode to python-mode-hook:
+`isortify-mode` to `python-mode-hook`:
 
 ```elisp
 (add-hook 'python-mode-hook 'isortify-mode)
