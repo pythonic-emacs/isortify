@@ -1,4 +1,4 @@
-;;; isortify.el --- (automatically) format python buffers using isort.
+;;; isortify.el --- (automatically) format python buffers using isort
 
 ;; Copyright (C) 2016-2018 Artem Malyshev
 
@@ -6,6 +6,7 @@
 ;; Homepage: https://github.com/proofit404/isortify
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "25") (pythonic "0.1.0"))
+;; Keywords: convenience isort
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published
