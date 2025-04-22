@@ -1,3 +1,5 @@
+;; -*- mode: eask; lexical-binding: t -*-
+
 (package "isortify"
          "0.0.1"
          "(automatically) format python buffers using isort")
